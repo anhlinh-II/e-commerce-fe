@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import CategoryGrid from "./categoryGrid/CategoryGrid";
 import Deal from "./deal/Deal";
 import ElectricCategory from "./electricCategory/ElectricCategory";
@@ -9,8 +9,9 @@ const Home = () => {
      return (
           <>
                <div className="space-y-5 lg:space-y-10 relative pb-20">
-                    <ElectricCategory />
                     <CategoryGrid />
+                    <Divider></Divider>
+                    <ElectricCategory />
 
                     <div className="pt-20">
                          <h1 className="text-lg text-center lg:text-4xl font-bold text-primary-color pb-5 lg:pb-10">TODAY'S DEALS</h1>

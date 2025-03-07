@@ -6,23 +6,25 @@ import { AddShoppingCart, FavoriteBorder, Storefront } from "@mui/icons-material
 import CategorySheet from "./CategorySheet";
 import { mainCategory } from "../../../data/category/mainCategory";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
      const theme = useTheme();
      const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
      const [selectedCategory, setSelectedCategory] = useState<any>();
      const [showCategorySheet, setShowCategorySheet] = useState<boolean>();
+     const navigate = useNavigate();
 
      return (
           <>
-               <Box className="sticky top-0 left-0 right-0 bg-white b" sx={{ zIndex: 2 }}>
+               <Box className="sticky top-0 left-0 right-0 bg-white opacity-95" sx={{ zIndex: 2 }}>
                     <div className="flex items-center justify-between px-5 lg:px-20 h-[70px] border-b">
                          <div className="flex items-center">
                               <div className="flex items-center gap-2">
                                    {!isLarge && <IconButton>
                                         <MenuIcon />
                                    </IconButton>}
-                                   <h1 className="logo cursor-pointer font-extrabold text-lg md:text-2xl text-primary-color">Eirei Yeager</h1>
+                                   <h1 onClick={() => navigate('/')} className="logo cursor-pointer font-extrabold text-lg md:text-2xl text-primary-color">Eirei Yeager</h1>
                               </div>
                               <ul className="flex items-center font-medium text-gray-800">
                                    {mainCategory.map((item) =>
@@ -47,7 +49,7 @@ const NavBar = () => {
                               </IconButton>
                               {
                                    true
-                                        ? <Button className="flex items-center gap-2">
+                                        ? <Button onClick={() => navigate('/account')} className="flex items-center gap-2">
                                              <Avatar sx={{ width: 29, height: 29 }} src="https://scontent.fhan5-9.fna.fbcdn.net/v/t39.30808-6/471817599_1601536043788792_7952900494001433727_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=413c3FXbmPMQ7kNvgEYi6IH&_nc_oc=AdgO2z_o_HrZF4yBWGmDcjCwWmt4BDu4HBd8lraA97CY0hbfevIMnyxkbHgjbhtrRC4&_nc_zt=23&_nc_ht=scontent.fhan5-9.fna&_nc_gid=AbdSO6jtdwOZgJtn2ZzkcYO&oh=00_AYDVpQl0n7sopPi6RB7YfUvA3IR0Opp80dFqYakbfoAziw&oe=67C2878F" />
                                              <h1 className="font-semibold hidden lg:block">Eirei</h1>
                                         </Button>
@@ -56,10 +58,10 @@ const NavBar = () => {
                               <IconButton>
                                    <FavoriteBorder sx={{ fontSize: 29 }} />
                               </IconButton>
-                              <IconButton>
+                              <IconButton onClick={() => navigate('/cart')}>
                                    <AddShoppingCart className="text-gray-700" sx={{ fontSize: 29 }} />
                               </IconButton>
-                              {isLarge && <Button startIcon={<Storefront />} variant="outlined">
+                              {isLarge && <Button onClick={() => navigate('/become-seller')} startIcon={<Storefront />} variant="outlined">
                                    Become Seller
                               </Button>}
                          </div>

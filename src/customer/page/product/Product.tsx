@@ -60,7 +60,7 @@ const Product = () => {
                               </FormControl>
                               <Divider />
                          </div>
-                         <section className="products_section grid sm:grid-cols-2 md:grid-cols-3 lg:gird-cols-4 gap-y-5 justify-center">
+                         <section className="products_section grid sm:grid-cols-2 md:grid-cols-3 lg:gird-cols-4 gap-y-4 justify-center">
                               {[1, 1, 1, 1, 1, 1, 1, 1].map(item => <ProductCard />)}
                          </section>
                          <div className="flex justify-center py-10">
