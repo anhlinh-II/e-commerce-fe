@@ -13,6 +13,8 @@ import { womenLevelThree } from "../../../data/category/levelThree/womenLevelThr
 import { furnitureLevelThree } from "../../../data/category/levelThree/furnitureLevelThree";
 import { electronicsLevelThree } from "../../../data/category/levelThree/electronicsLevelThree";
 import { mainCategory } from "../../../data/category/mainCategory";
+import { useAppDispatch } from "../../../state/store";
+import { createProduct } from "../../../state/seller/sellerProductSlice";
 
 const categoryTwo: { [key: string]: any[] } = {
      men: menLevelTwo,
@@ -34,8 +36,9 @@ const categoryThree: { [key: string]: any[] } = {
 
 const AddProductForm = () => {
      const [uploadImage, setUploadImage] = useState(false);
-
      const [snackbarOpen, setOpenStackbar] = useState(false);
+
+     const dispatch = useAppDispatch()
 
      const formik = useFormik({
           initialValues: {
@@ -51,7 +54,10 @@ const AddProductForm = () => {
                category3: "",
                sizes: "",
           },
-          onSubmit: (values) => { console.log(values) }
+          onSubmit: (values) => {
+               console.log(values)
+               dispatch(createProduct({request: values, jwt: localStorage.getItem("jwt")}))
+          }
      })
      const handleImageChange = async (event: any) => {
           const file = event.target.files[0];
@@ -80,7 +86,7 @@ const AddProductForm = () => {
 
      return (
           <div>
-               <form>
+               <form onSubmit={formik.handleSubmit}>
                     <Grid2 container spacing={2}>
                          <Grid2 className="flex flex-wrap gap-5" size={{ xs: 12 }}>
                               <input
@@ -168,7 +174,6 @@ const AddProductForm = () => {
                                    value={formik.values.mrpPrice}
                                    onChange={formik.handleChange}
                                    error={formik.touched.mrpPrice && Boolean(formik.errors.mrpPrice)}
-                                   helperText={formik.touched.mrpPrice && formik.errors.mrpPrice}
                                    required
                               />
                          </Grid2>
@@ -198,6 +203,7 @@ const AddProductForm = () => {
                                    <Select
                                         labelId="color-label"
                                         id="color"
+                                        name="color"
                                         value={formik.values.color}
                                         onChange={formik.handleChange}
                                         label="Color"
@@ -224,10 +230,11 @@ const AddProductForm = () => {
                                    error={formik.touched.sizes && Boolean(formik.errors.sizes)}
                                    required
                               >
-                                   <InputLabel id="sizes-label">sizes</InputLabel>
+                                   <InputLabel id="sizes-label">Sizes</InputLabel>
                                    <Select
                                         labelId="sizes-label"
                                         id="sizes"
+                                        name="sizes"
                                         value={formik.values.sizes}
                                         onChange={formik.handleChange}
                                         label="Sizes"
@@ -259,10 +266,11 @@ const AddProductForm = () => {
                                    <InputLabel id="category-label">Category</InputLabel>
                                    <Select
                                         labelId="category-label"
+                                        name="category"
                                         id="category"
                                         value={formik.values.category}
                                         onChange={formik.handleChange}
-                                        label="category"
+                                        label="Category"
                                    >
                                         {
                                              mainCategory.map(item => (
@@ -279,7 +287,7 @@ const AddProductForm = () => {
                          <Grid2 size={{ xs: 12, md: 4, lg: 4 }}>
                               <FormControl
                                    fullWidth
-                                   error={formik.touched.color && Boolean(formik.errors.color)}
+                                   error={formik.touched.category && Boolean(formik.errors.category)}
                                    required
                               >
                                    <InputLabel id="category2-label">Second Category</InputLabel>
@@ -292,7 +300,7 @@ const AddProductForm = () => {
                                         label="Second Category"
                                    >
                                         {
-                                             formik.values.category && 
+                                             formik.values.category &&
                                              categoryTwo[formik.values.category]?.map((item) => (
                                                   <MenuItem value={item.categoryId}>{item.name}</MenuItem>
                                              ))
@@ -307,15 +315,15 @@ const AddProductForm = () => {
                          <Grid2 size={{ xs: 12, md: 4, lg: 4 }}>
                               <FormControl
                                    fullWidth
-                                   error={formik.touched.category && Boolean(formik.errors.category)}
+                                   error={formik.touched.category3 && Boolean(formik.errors.category3)}
                                    required
                               >
                                    <InputLabel id="category-label">Third Category</InputLabel>
                                    <Select
                                         labelId="category-label"
-                                        id="category"
+                                        id="category3"
                                         name="category3"
-                                        value={formik.values.category}
+                                        value={formik.values.category3}
                                         onChange={formik.handleChange}
                                         label="Third Category"
                                    >

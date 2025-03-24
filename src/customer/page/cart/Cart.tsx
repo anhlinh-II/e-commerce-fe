@@ -1,10 +1,12 @@
 import { Close, LocalOffer } from "@mui/icons-material";
-import CartItem from "./CartItem";
+import CartItemCard from "./CartItemCard";
 import { blue } from "@mui/material/colors";
 import { Button, IconButton, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PricingCart from "./PricingCart";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../state/store";
+import { fetchUserCart } from "../../../state/customer/cartSlice";
 
 const Cart = () => {
      const navigate = useNavigate();
@@ -12,11 +14,17 @@ const Cart = () => {
      const handleChange = (e: any) => {
           setCouponCode(e.target.value);
      }
+     const dispatch = useAppDispatch();
+     const { cart } = useAppSelector(store => store)
+
+     useEffect(() => {
+          dispatch(fetchUserCart(localStorage.getItem("jwt") || ""))
+     }, [])
      return (
           <div className="pt-10 px-5 sm:px-10 md:px-60 min-h-screen">
                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                     <div className="cartItemSelection lg:col-span-2 space-y-3">
-                         {[1, 1, 1, 1, 1, 11, 1, 1].map(item => <CartItem />)}
+                         {cart.cart?.cartItems.map(item => <CartItemCard item={item} />)}
                     </div>
                     <div className="col-span-1 text-sm space-y-3">
                          <div className="border rounded-md px-5 py-3 space-y-5">
@@ -47,7 +55,7 @@ const Cart = () => {
                          <div className="border rounded-md">
                               <PricingCart />
                               <div className="p-5">
-                                   <Button onClick={() => navigate('/checkout')} fullWidth variant="contained" sx={{py: "11px"}}>Buy now</Button>
+                                   <Button onClick={() => navigate('/checkout')} fullWidth variant="contained" sx={{ py: "11px" }}>Buy now</Button>
                               </div>
                          </div>
                     </div>

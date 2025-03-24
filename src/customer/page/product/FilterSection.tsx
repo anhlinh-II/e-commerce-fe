@@ -56,7 +56,7 @@ const FilterSection = () => {
                               <RadioGroup
                                    aria-labelledby="color"
                                    defaultValue=""
-                                   name="radio-buttons-group"
+                                   name="color"
                                    onChange={updateFilterParams}
                               >
                                    {colors.slice(0, expendColor ? colors.length : 5).map((item) => <FormControlLabel value={item.name} control={<Radio />}

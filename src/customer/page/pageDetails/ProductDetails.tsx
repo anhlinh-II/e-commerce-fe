@@ -2,27 +2,47 @@ import { Add, AddShoppingCart, FavoriteBorder, LocalShipping, Remove, Shield, Wa
 import StarIcon from '@mui/icons-material/Star';
 import { Button, Divider } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SimilarProduct from './SimilarProduct';
 import ReviewCard from '../review/ReviewCard';
+import { useAppDispatch, useAppSelector } from '../../../state/store';
+import { useParams } from 'react-router-dom';
+import { fetchProductById } from '../../../state/customer/productSlice';
+import { getValue } from '@testing-library/user-event/dist/utils';
 
 const ProductDetails = () => {
      const [quantity, setQuantity] = useState(1);
+     const dispatch = useAppDispatch();
+     const { productId } = useParams();
+     const { product } = useAppSelector(store => store)
+     const [activeImage, setActiveImage] = useState(0)
+
+     useEffect(() => {
+          console.log("productId >> ", productId)
+          dispatch(fetchProductById(Number(productId)))
+     }, [productId])
+
+     const handleActiveImage = (value: number) => () => {
+          setActiveImage(value)
+     }
+
+     console.log("product >> ", product.product)
+
      return (
           <div className="px-5 lg:px-20 pt-10">
                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <section className="flex flex-col lg:flex-row gap-5">
                          <div className="w-full lg:w-[15%] flex flex-wrap lg:flex-col gap-3">
-                              {[1, 1, 1, 1].map(item => <img src="https://down-vn.img.susercontent.com/file/sg-11134201-7rd5q-lx28n0i5dg9r64.webp" alt="product" className="lg:w-full w-[50px] cursor-pointer rounded-md" />)}
+                              {product.product?.images.map((item, index) => <img src={item} onClick={handleActiveImage(index)} alt="product" className="lg:w-full w-[50px] cursor-pointer rounded-md" />)}
                          </div>
                          <div className="w-full lg:w-[85%]">
-                              <img className="w-full rounded-md" src="https://down-vn.img.susercontent.com/file/sg-11134201-7rd5q-lx28n0i5dg9r64.webp" alt="product" />
+                              <img className="w-full rounded-md" src={product.product?.images[activeImage]} alt="product" />
                          </div>
                     </section>
 
                     <section>
-                         <h1 className="font-bold text-lg text-primary-color">Bikini</h1>
-                         <p className="text-gray-500 font-semibold">Women bikini</p>
+                         <h1 className="font-bold text-lg text-primary-color">{product.product?.seller?.businessDetails.businessName}</h1>
+                         <p className="text-gray-500 font-semibold">{product.product?.title}</p>
                          <div className="flex justify-between items-center py-2 border w-[180px] px-3 pt-5">
                               <div className="flex gap-1 items-center">
                                    <span>4</span>
@@ -36,13 +56,13 @@ const ProductDetails = () => {
                          <div>
                               <div className='price flex items-center gap-3 mt-5 text-2xl'>
                                    <span className='font-sans text-gray-800'>
-                                        $ 400
+                                        $ {product.product?.sellingPrice}
                                    </span>
                                    <span className='thin-line-through text-gray-400'>
-                                        $ 999
+                                        $ {product.product?.mrpPrice}
                                    </span>
                                    <span className='text-primary-color font-semibold'>
-                                        60%
+                                        {product.product?.discountPercent}%
                                    </span>
                               </div>
                               <p className='text-sm'>Inclusive of all taxes. Free Shipping above 500$</p>
@@ -96,7 +116,7 @@ const ProductDetails = () => {
                          </div>
                          <div className='mt-5'>
                               <p>
-                                   Lorem ipsum, dolor sit amet consectetur adipisicing elit. Asperiores sapiente, rerum velit nam distinctio facere fuga laudantium minus unde? Iure ex id itaque praesentium, debitis expedita quaerat nemo aperiam nisi?
+                                   {product.product?.description}
                               </p>
                          </div>
 

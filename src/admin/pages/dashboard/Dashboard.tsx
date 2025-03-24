@@ -1,3 +1,4 @@
+import AdminRoutes from "../../../routes/AdminRoutes";
 import AdminDrawerList from "../../component/AdminDrawerList";
 
 const AdminDashboard = () => {
@@ -9,7 +10,7 @@ const AdminDashboard = () => {
                          <AdminDrawerList toggleDrawer={toggleDrawer} />
                     </section>
                     <section className="p-10 w-full lg:w-[80%] overflow-y-auto">
-                         {/* <SellerRoutes /> */}
+                         <AdminRoutes />
                     </section>
                </div>
           </div>

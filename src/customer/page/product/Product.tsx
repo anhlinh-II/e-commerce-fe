@@ -2,11 +2,19 @@ import { Box, Divider, FormControl, IconButton, InputLabel, MenuItem, Pagination
 import FilterSection from "./FilterSection";
 import ProductCard from "./ProductCard";
 import { FilterAlt } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../state/store";
+import { fetchAllProducts } from "../../../state/customer/productSlice";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const Product = () => {
      const theme = useTheme();
      const isLarge = useMediaQuery(theme.breakpoints.up("lg"))
+
+     const dispatch = useAppDispatch();
+     const [searchParam, setSearchParam] = useSearchParams();
+     const { categoryId } = useParams();
+     const { product } = useAppSelector((store) => store)
 
      const [sort, setSort] = useState();
      const [page, setPage] = useState(1);
@@ -18,6 +26,25 @@ const Product = () => {
      const handlePageChange = (value: number) => {
           setPage(value);
      }
+
+     useEffect(() => {
+          const [minPrice, maxPrice] = searchParam.get("price")?.split("-") || [];
+          const color = searchParam.get("color");
+          const minDiscount = searchParam.get("discount") ? Number(searchParam.get("discount")) : undefined;
+          const pageNumber = page - 1;
+
+          const newFilter = {
+               color: color || "",
+               minPrice: minPrice ? Number(minPrice) : undefined,
+               maxPrice: maxPrice ? Number(maxPrice) : undefined,
+               minDiscount,
+               pageNumber
+          }
+          console.log("newFilter >> ", newFilter)
+
+          dispatch(fetchAllProducts(newFilter))
+
+     }, [categoryId, searchParam])
 
      return (
           <div className="-z-10 mt-10">
@@ -60,8 +87,9 @@ const Product = () => {
                               </FormControl>
                               <Divider />
                          </div>
+                         <Divider />
                          <section className="products_section grid sm:grid-cols-2 md:grid-cols-3 lg:gird-cols-4 gap-y-4 justify-center">
-                              {[1, 1, 1, 1, 1, 1, 1, 1].map(item => <ProductCard />)}
+                              {product.products.map(item => <ProductCard item={item} />)}
                          </section>
                          <div className="flex justify-center py-10">
                               <Pagination

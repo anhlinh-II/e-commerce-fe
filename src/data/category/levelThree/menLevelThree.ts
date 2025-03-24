@@ -52,29 +52,5 @@ export const menLevelThree = [
           "categoryId": "men_rain_jackets",
           "parentCategoryName": "Topwear",
           "parentCategoryId": "men_topwear"
-     },
-     {
-          "name": "T-Shirts",
-          "categoryId": "men_t_shirts",
-          "parentCategoryName": "Topwear",
-          "parentCategoryId": "men_topwear"
-     },
-     {
-          "name": "T-Shirts",
-          "categoryId": "men_t_shirts",
-          "parentCategoryName": "Topwear",
-          "parentCategoryId": "men_topwear"
-     },
-     {
-          "name": "T-Shirts",
-          "categoryId": "men_t_shirts",
-          "parentCategoryName": "Topwear",
-          "parentCategoryId": "men_topwear"
-     },
-     {
-          "name": "T-Shirts",
-          "categoryId": "men_t_shirts",
-          "parentCategoryName": "Topwear",
-          "parentCategoryId": "men_topwear"
      }
 ]

@@ -3,21 +3,19 @@ import './ProductCard.css'
 import { Button } from '@mui/material';
 import { Favorite, ModeComment } from '@mui/icons-material';
 import { blue } from '@mui/material/colors';
+import { Product } from '../../../types/ProductType';
+import { useNavigate } from 'react-router-dom';
 
-const images = [
-     "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lq4sf0sg0d2v26.webp"
-     , "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lq4sf0sg0d2v26.webp"
-     , "https://down-vn.img.susercontent.com/file/sg-11134201-7rd5q-lx28n0i5dg9r64.webp"
-]
-const ProductCard = () => {
+const ProductCard = ({item}: {item: Product}) => {
      const [currentImage, setCurrentImage] = useState(0);
      const [isHovered, setIsHovered] = useState(false);
+     const navigate = useNavigate();
 
      useEffect(() => {
           let interval: any
           if (isHovered) {
                interval = setInterval(() => {
-                    setCurrentImage((prevImage) => (prevImage + 1) % images.length)
+                    setCurrentImage((prevImage) => (prevImage + 1) % item.images.length)
                }, 3000);
           } else if (interval) {
                clearInterval(interval);
@@ -27,13 +25,13 @@ const ProductCard = () => {
      }, [isHovered])
      return (
           <>
-               <div className="group px-4 relative">
+               <div onClick={() => navigate(`/product-details/${item.category?.categoryId}/${item.title}/${item.id}`)} className="group px-4 relative">
                     <div
                          onMouseEnter={() => setIsHovered(true)}
                          onMouseLeave={() => setIsHovered(false)}
                          className="card"
                     >
-                         {images.map((item, index) => <img className="card-media object-top" src={item} style={{ transform: `translateX(${(index - currentImage) * 100}%)` }} alt="" />)}
+                         {item.images.map((item, index) => <img className="card-media object-top" src={item} style={{ transform: `translateX(${(index - currentImage) * 100}%)` }} alt="" />)}
                          {
                               isHovered &&
                               <div className='indicator flex flex-col items-center space-y-2'>
@@ -50,18 +48,18 @@ const ProductCard = () => {
                     </div>
                     <div className='details pt-3 space-y-1 group-hover-effect rounded-md'>
                          <div className='name'>
-                              <h1>Niky</h1>
-                              <p>Blue Shirt</p>
+                              <h1>{item.seller?.businessDetails.businessName}</h1>
+                              <p>{item.title}</p>   
                          </div>
                          <div className='price flex items-center gap-3'>
                               <span className='font-sans text-gray-800'>
-                                   $ 400
+                                   $ {item.sellingPrice}
                               </span>
                               <span className='thin-line-through text-gray-400'>
-                                   $ 999
+                                   $ {item.mrpPrice}
                               </span>
                               <span className='text-primary-color font-semibold'>
-                                   60%
+                                   {item.discountPercent}%
                               </span>
                          </div>
 
