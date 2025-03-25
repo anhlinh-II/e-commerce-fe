@@ -1,5 +1,6 @@
 export interface Address {
      id?: number;
+     address: string;
      name: string;
      mobile: string;
      pinCode: string;

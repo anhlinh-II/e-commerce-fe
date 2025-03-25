@@ -1,16 +1,27 @@
 import { Box, Button, Divider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import OrderStepper from "./OrderStepper";
 import { Payments } from "@mui/icons-material";
+import { useAppDispatch, useAppSelector } from "../../../state/store";
+import { useEffect } from "react";
+import { fetchOrderById, fetchOrderItemById } from "../../../state/customer/orderSlice";
 
 const OrderDetails = () => {
      const navigate = useNavigate();
+     const dispatch = useAppDispatch();
+     const { orderId, orderItemId } = useParams();
+     const { order } = useAppSelector(store => store)
+
+     useEffect(() => {
+          dispatch(fetchOrderById({ orderId: Number(orderId), jwt: localStorage.getItem("jwt") || "" }))
+          dispatch(fetchOrderItemById({ orderItemId: Number(orderItemId), jwt: localStorage.getItem("jwt") || "" }))
+     }, [])
      return (
           <Box className="space-y-5">
                <section className="flex flex-col gap-5 justify-center items-center">
-                    <img className="w-[100px]" src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lq4sf0sg0d2v26.webp" alt="" />
+                    <img className="w-[100px]" src={order.orderItem?.product.images[0]} alt="" />
                     <div className="text-sm space-y-1 text-center">
-                         <h1 className="font-bold">Eirei Clothings</h1>
+                         <h1 className="font-bold">{order.orderItem?.product.seller?.businessDetails.businessName}</h1>
                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae ratione, eveniet quae facilis vitae, temporibus suscipit consectetur fugit voluptatum perspiciatis possimus! Consectetur, velit. Deleniti optio neque, eos beatae officiis saepe?</p>
                          <p><strong>Size: </strong> M</p>
                     </div>
@@ -28,12 +39,15 @@ const OrderDetails = () => {
                     <h1 className="font-bold pb-3">Delivery Address</h1>
                     <div className="text-sm space-y-2">
                          <div className="flex gap-5 font-medium">
-                              <p>Eirei</p>
+                              <p>{order.currentOrder?.shhippingAdress.name}</p>
                               <Divider flexItem orientation="vertical" />
-                              <p>085335167</p>
+                              <p>{order.currentOrder?.shhippingAdress.mobile}</p>
                          </div>
                          <p>
-                              Dai Tu, Dai Kim, Hoang Mai, Ha Noi - 100000
+                              {order.currentOrder?.shhippingAdress.address},{" "}
+                              {order.currentOrder?.shhippingAdress.region}, {" "}
+                              {order.currentOrder?.shhippingAdress.city},{" - "}
+                              {order.currentOrder?.shhippingAdress.pinCode}
                          </p>
                     </div>
                </div>
@@ -44,7 +58,7 @@ const OrderDetails = () => {
                               <p className="font-bold">Total Item Price</p>
                               <p>You Saved <span className="text-primary-color font-medium text-xs">699.00 $</span> on this item</p>
                          </div>
-                         <p className="font-medium">799.00 $</p>
+                         <p className="font-medium">{order.orderItem?.sellingPrice} $</p>
                     </div>
                     <div className="px-5">
                          <div className="bg-blue-50 px-5 py-2 text-xs font-medium flex items-center gap-3">
@@ -54,7 +68,7 @@ const OrderDetails = () => {
                     </div>
                     <Divider />
                     <div className="px-5 pb-5">
-                         <p className="text-xs"><strong>Sold by: </strong>Eirei Clothing</p>
+                         <p className="text-xs"><strong>Sold by: </strong>{order.orderItem?.product.seller?.businessDetails.businessName}</p>
                     </div>
                     <div className="p-10">
                          <Button
