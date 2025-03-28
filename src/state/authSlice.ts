@@ -29,7 +29,7 @@ export const signin = createAsyncThunk<any, any>(
      }
 )
 
-export const sigunup = createAsyncThunk<any, any>(
+export const signup = createAsyncThunk<any, any>(
      "/auth/signup",
      async (signupRequest, { rejectWithValue }) => {
           try {
@@ -108,7 +108,7 @@ const authSlice = createSlice({
                     state.jwt = action.payload
                     state.isLoggedIn = true
                })
-               .addCase(sigunup.fulfilled, (state, action) => {
+               .addCase(signup.fulfilled, (state, action) => {
                     state.jwt = action.payload
                     state.isLoggedIn = true
                })

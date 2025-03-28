@@ -1,8 +1,14 @@
 import { Box, Button, FormControlLabel, imageListClasses, Modal, Radio, RadioGroup, Typography } from "@mui/material";
 import AddressCart from "./AddressCard";
-import React from "react";
+import React, { use, useEffect } from "react";
 import AddressForm from "./AddressForm";
 import PricingCart from "../cart/PricingCart";
+import { useAppDispatch, useAppSelector } from "../../../state/store";
+import { stat } from "fs";
+import { fetchAddressesByUser } from "../../../state/customer/addressSlice";
+import { api } from "../../../config/Api";
+import { createOrder } from "../../../state/customer/orderSlice";
+import { Address } from "../../../types/UserType";
 
 const style = {
      position: 'absolute',
@@ -33,11 +39,39 @@ const Checkout = () => {
      const [open, setOpen] = React.useState(false);
      const handleOpen = () => setOpen(true);
      const handleClose = () => setOpen(false);
+     const { address, order, cart } = useAppSelector(state => state);
+     const dispatch = useAppDispatch();
+     const [selectedAddress, setSelectedAddress] = React.useState<string>("");
+
+     useEffect(() => {
+          dispatch(fetchAddressesByUser(localStorage.getItem("jwt") || ""))
+     }, [])
 
      const [paymentGateway, setPaymentGateway] = React.useState("vnpay");
 
      const handlePaymentChange = (e: any) => {
           setPaymentGateway(e.target.value);
+     }
+
+     const handleCheckOut = async (selectedAddress: string) => {
+          // if(address.addresses) {
+          //      const a = address.addresses.find((item: Address) => item.id === Number(selectedAddress));
+          //      if(a) {
+          //           dispatch(createOrder({address: a, jwt: localStorage.getItem("jwt") || ""}))
+          //      }
+          // }
+          const response = await api.get('/payment/vn-pay', {
+               headers: {
+                    Authorization: `Bearer ${localStorage.getItem("jwt")}`
+               },
+               params: {
+                    bankCode: "NCB",
+                    amount: cart.cart?.totalSellingPrice,
+               }
+          })
+          if (response.data.code === "ok") {
+               window.location.href = response.data.paymentUrl;
+          }
      }
 
      return (
@@ -54,7 +88,7 @@ const Checkout = () => {
                               <div className="text-xs font-medium space-y-5">
                                    <p>Saved Addresses</p>
                                    <div className="space-y-3">
-                                        {[1, 1, 1, 1].map(item => <AddressCart />)}
+                                        {address.addresses && address.addresses.map(item => <AddressCart item={item} selectedItem={selectedAddress} setSelectedItem={setSelectedAddress} />)}
                                    </div>
                               </div>
 
@@ -84,9 +118,9 @@ const Checkout = () => {
                               </div>
                               <div className="border rounded-md">
 
-                                   <PricingCart />
+                                   <PricingCart data={cart.cart} />
                                    <div className="p-5">
-                                        <Button fullWidth variant="contained" sx={{ py: "11px" }}>Checkout</Button>
+                                        <Button onClick={() => handleCheckOut(selectedAddress)} fullWidth variant="contained" sx={{ py: "11px" }}>Checkout</Button>
                                    </div>
                               </div>
                          </div>

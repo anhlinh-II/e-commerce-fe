@@ -53,7 +53,7 @@ const Cart = () => {
                               }
                          </div>
                          <div className="border rounded-md">
-                              <PricingCart />
+                              <PricingCart data={cart.cart} />
                               <div className="p-5">
                                    <Button onClick={() => navigate('/checkout')} fullWidth variant="contained" sx={{ py: "11px" }}>Buy now</Button>
                               </div>

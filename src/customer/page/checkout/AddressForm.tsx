@@ -3,6 +3,7 @@ import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import { useAppDispatch } from "../../../state/store";
 import { createOrder } from "../../../state/customer/orderSlice";
+import { createAddress } from "../../../state/customer/addressSlice";
 
 const AddressFormSchema = Yup.object().shape({
      name: Yup.string().required("Name is required"),
@@ -29,13 +30,7 @@ const AddressForm = ({paymentGateway}: any) => {
           validationSchema: AddressFormSchema,
           onSubmit: (values) => {
                console.log(values);
-               dispatch(createOrder(
-                    {
-                         address: values,
-                         jwt: localStorage.getItem("jwt") || "",
-                         paymentGateway
-                    }
-               ))
+               dispatch(createAddress({ jwt: localStorage.getItem("jwt") || "", request: values }));
           }
      });
      return (

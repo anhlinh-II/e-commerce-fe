@@ -101,13 +101,13 @@ const sellerOrderSlice = createSlice({
                     state.loading = true;
                     state.error = null;
                })
-               .addCase(deleteOrder.pending, (state, action) => {
+               .addCase(deleteOrder.fulfilled, (state, action) => {
                     state.loading = false;
                     state.orders = state.orders.filter(order => order.id != action.meta.arg.orderId)
                })
-               .addCase(deleteOrder.pending, (state, action) => {
+               .addCase(deleteOrder.rejected, (state, action) => {
                     state.loading = false;
-                    state.error = action.payload || "";
+                    state.error = action.payload as string;
                })
      }
 })

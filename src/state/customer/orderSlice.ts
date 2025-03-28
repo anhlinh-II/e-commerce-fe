@@ -50,22 +50,18 @@ export const fetchOrderById = createAsyncThunk<Order, { orderId: number; jwt: st
      }
 )
 
-export const createOrder = createAsyncThunk<any, { address: Address; jwt: string, paymentGateway: string }>(
+export const createOrder = createAsyncThunk(
      "orders/createOrder",
-     async ({ address, jwt, paymentGateway }, { rejectWithValue }) => {
+     async ({ address, jwt }: {address: Address; jwt: string}) => {
           try {
-               const response = await api.post(`${API_URL}/`, address, {
+               const response = await api.post(`${API_URL}`, address, {
                     headers: { Authorization: `Bearer ${jwt}` },
-                    params: { paymentGateway: paymentGateway }
                })
-               console.log("order created >> ", response.data)
-               if (response.data.payment_link_url) {
-                    window.location.href = response.data.payment_link_url;
-               }
+               console.log("orders created >> ", response.data)
+               
                return response.data;
           } catch (error: any) {
                console.log("error >> ", error.response);
-               return rejectWithValue("fail to create order")
           }
      }
 )

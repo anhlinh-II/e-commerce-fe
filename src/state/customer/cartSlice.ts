@@ -101,6 +101,23 @@ export const updateCartItem = createAsyncThunk<any, { jwt: string | null; cartIt
      }
 )
 
+export const clearCart = createAsyncThunk<any>(   
+     "cart/clearCart",
+     async () => {
+          try {
+               const jwt = localStorage.getItem("jwt");
+               const response = await api.delete(`${API_URL}/clear-cart`, {
+                    headers: {
+                         Authorization: `Bearer ${jwt}`
+                    }
+               })
+               return response.data;
+          } catch (error: any) {
+               console.log("error >> ", error.response)
+          }
+     }
+)
+
 const cartSlice = createSlice({
      name: "cart",
      initialState,
@@ -188,6 +205,20 @@ const cartSlice = createSlice({
                .addCase(applyCoupon.fulfilled, (state, action) => {
                     state.loading = false;
                     state.cart = action.payload;
+               })
+
+               // clear cart
+               .addCase(clearCart.pending, (state, action) => {
+                    state.loading = false;
+                    state.error = null;
+               })
+               .addCase(clearCart.fulfilled, (state, action) => {
+                    state.loading = false;
+                    state.cart = null;
+               })
+               .addCase(clearCart.rejected, (state, action) => {
+                    state.loading = false;
+                    state.error = action.payload as string;
                })
      }
 })

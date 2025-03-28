@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { sendLoginSignupOtp } from "../../../state/authSlice";
+import { sendLoginSignupOtp, signup } from "../../../state/authSlice";
 import { sellerLogin } from "../../../state/seller/sellerAuthSlice";
 import { useAppDispatch } from "../../../state/store";
 import { TextField, Button } from "@mui/material";
@@ -15,7 +15,7 @@ const RegisterForm = () => {
     },
     onSubmit: (values) => {
       console.log("form data ", values)
-      dispatch(sellerLogin(values))
+      dispatch(signup(values))
     }
   });
 

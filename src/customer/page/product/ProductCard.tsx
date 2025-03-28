@@ -34,7 +34,7 @@ const ProductCard = ({item}: {item: Product}) => {
 
      return (
           <>
-               <div onClick={() => navigate(`/product-details/${item.category?.categoryId}/${item.title}/${item.id}`)} className="group px-4 relative">
+               <div onClick={() => navigate(`/product-details/${item.category?.categoryId}/${item.title}/${item.id}`)} className="group px-4 relative border border-gray-400">
                     <div
                          onMouseEnter={() => setIsHovered(true)}
                          onMouseLeave={() => setIsHovered(false)}
